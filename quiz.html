@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار قيادة الدراجات النارية</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>اختبار قيادة الدراجات النارية</h1>
+            <a href="index.html" class="back-btn">← العودة للرئيسية</a>
+        </header>
+        
+        <main>
+            <div class="quiz-container">
+                <div id="quiz-content">
+                    <div class="question-container">
+                        <div class="progress-bar">
+                            <span id="progress-text">السؤال 1 من 30</span>
+                            <div class="progress-track">
+                                <div id="progress-fill" class="progress-fill"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-image">
+                            <img id="question-img" src="" alt="صورة السؤال">
+                        </div>
+                        
+                        <h2 id="question-text">جاري تحميل السؤال...</h2>
+                        
+                        <div id="options-container" class="options">
+                            <!-- Options will be loaded here -->
+                        </div>
+                        
+                        <div class="button-container">
+                            <button id="confirm-btn" class="confirm-btn" style="display: none;">تأكيد الإجابة</button>
+                            <button id="next-btn" class="next-btn" style="display: none;">السؤال التالي</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="result-container" style="display: none;">
+                    <h2>النتيجة</h2>
+                    <div class="result-display">
+                        <p id="score-text">لقد حصلت على 0 من 0</p>
+                        <p id="percentage-text">0%</p>
+                        <p id="message-text"></p>
+                        <button onclick="restartQuiz()" class="restart-btn">إعادة الاختبار</button>
+                        <a href="index.html" class="back-btn">العودة للرئيسية</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="quiz.js"></script>
+    <script>
+        // Motorcycle quiz questions - Original from the source
+        const motorcycleQuestions = [
+            {
+                question: "تتأمن الحماية الحقيقة لسائق الدراجة النارية عن طريق:",
+                options: ["ارتدائه للملابس الخاصة براكبي الدراجات النارية", "القيادة على الإطار الخلفي فقط", "تأكد من وجود تأمين على الدراجة"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "البدلات الواقية الجلدية الخاصة براكبي الدراجات النارية لها قدرة على مقاومة:",
+                options: ["الاحتكاك بالحصى والاسفلت عند السقوط", "الحريق", "القيادة السريعة بين المركبات"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "ارتداء سائق الدراجة النارية للقفازات الخاصة بالدراجات النارية يؤمن له:",
+                options: ["حماية اليدين من الاصابة ومن البرد", "الحماية القانونية واعتراف شركات التأمين عند حصول اصطدام", "التحكم بالمقود على المنحنيات"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "انتعال راكب الدراجة النارية للحذاء الخاص براكبي الدراجات النارية يؤمن له حماية:",
+                options: ["الركبة والفخذ من الماء والبرد", "الأرجل من الغبار", "القدمين والقصبة من الإصابة، ومن الماء والبرد"],
+                correct: 2,
+                image: ""
+            },
+            {
+                question: "ارتداء سائق الدراجة النارية لواقي العمود الفقري الخاص براكبي الدراجات النارية، يؤمن له حماية:",
+                options: ["الصدر والبطن، من الحر والبرد", "العمود الفقري والنخاع الشوكي، من المطر", "العمود الفقري والنخاع الشوكي، من الإصابة"],
+                correct: 2,
+                image: ""
+            },
+            {
+                question: "عند رؤية هذه الإشارة، ماذا تعني؟",
+                options: ["ممنوع الدخول", "إعطاء الأفضلية", "التوقف", "المرور مسموح"],
+                correct: 0,
+                image: "images/signs/sign6.jpg"
+            },
+            {
+                question: "عند رؤية هذه الإشارة، ماذا يجب عليك فعله؟",
+                options: ["تخفيف السرعة", "التوقف", "زيادة السرعة", "استخدام البوق"],
+                correct: 0,
+                image: "images/signs/sign7.jpg"
+            },
+            {
+                question: "ما معنى هذه الإشارة؟",
+                options: ["ممنوع التجاوز", "إلزامي الدوران", "طريق مغلق", "موقف سيارات"],
+                correct: 0,
+                image: "images/signs/sign8.jpg"
+            },
+            {
+                question: "عند رؤية هذه الإشارة، ماذا يجب عليك؟",
+                options: ["إعطاء الأفضلية للمشاة", "التوقف", "زيادة السرعة", "استخدام البوق"],
+                correct: 0,
+                image: "images/signs/sign9.jpg"
+            },
+            {
+                question: "ماذا تعني هذه الإشارة؟",
+                options: ["إعطاء الأفضلية", "ممنوع المرور", "التوقف", "المرور مسموح"],
+                correct: 0,
+                image: "images/signs/sign10.jpg"
+            },
+            {
+                question: "عند رؤية هذه الإشارة، ما هو الإجراء الصحيح؟",
+                options: ["تخفيف السرعة", "التوقف", "زيادة السرعة", "استخدام البوق"],
+                correct: 0,
+                image: "images/signs/sign11.jpg"
+            },
+            {
+                question: "ماذا تعني هذه الإشارة؟",
+                options: ["طريق رئيسي", "طريق فرعي", "ممنوع الدخول", "إعطاء الأفضلية"],
+                correct: 0,
+                image: "images/signs/sign12.jpg"
+            },
+            {
+                question: "عند رؤية هذه الإشارة، ماذا يجب عليك؟",
+                options: ["الحذر", "التوقف", "زيادة السرعة", "استخدام البوق"],
+                correct: 0,
+                image: "images/signs/sign13.jpg"
+            },
+            {
+                question: "ما معنى هذه الإشارة؟",
+                options: ["ممنوع التجاوز", "إلزامي الدوران", "طريق مغلق", "موقف سيارات"],
+                correct: 0,
+                image: "images/signs/sign14.jpg"
+            },
+            {
+                question: "عند رؤية هذه الإشارة، ماذا تعني؟",
+                options: ["إلزامي الدوران يمين", "إلزامي الدوران يسار", "الاستمرار مستقيماً", "ممنوع الدخول"],
+                correct: 0,
+                image: "images/signs/sign15.jpg"
+            },
+            {
+                question: "ماذا تعني هذه الإشارة؟",
+                options: ["ممنوع الوقوف", "ممنوع التجاوز", "إلزامي الدوران", "طريق مغلق"],
+                correct: 0,
+                image: "images/signs/sign16.jpg"
+            },
+            {
+                question: "عند رؤية هذه الإشارة، ما هو الإجراء الصحيح؟",
+                options: ["التوقف", "تخفيف السرعة", "زيادة السرعة", "استخدام البوق"],
+                correct: 0,
+                image: "images/signs/sign17.jpg"
+            },
+            {
+                question: "ماذا تعني هذه الإشارة؟",
+                options: ["إعطاء الأفضلية", "ممنوع المرور", "التوقف", "المرور مسموح"],
+                correct: 0,
+                image: "images/signs/sign18.jpg"
+            },
+            {
+                question: "عند رؤية هذه الإشارة، ماذا يجب عليك؟",
+                options: ["الحذر", "التوقف", "زيادة السرعة", "استخدام البوق"],
+                correct: 0,
+                image: "images/signs/sign19.jpg"
+            },
+            {
+                question: "ما معنى هذه الإشارة؟",
+                options: ["ممنوع التجاوز", "إلزامي الدوران", "طريق مغلق", "موقف سيارات"],
+                correct: 0,
+                image: "images/signs/sign20.jpg"
+            },
+            {
+                question: "هل يحق لسائق الدراجة النارية القيادة بين المركبات الأخرى؟",
+                options: ["نعم، إذا كانت سرعته لا تتجاوز سرعة المركبات الأخرى", "نعم، إذا كان الطريق واسعاً", "لا"],
+                correct: 2,
+                image: ""
+            },
+            {
+                question: "عندما يقترب سائق الدراجة النارية من تقاطع طريق، يجب عليه:",
+                options: ["تخفيف سرعته والتحلي بالحذر", "زيادة سرعته لتجاوز التقاطع بسرعة", "استخدام البوق بشكل مستمر"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما يقترب سائق الدراجة النارية من منعطف، يجب عليه:",
+                options: ["تخفيف سرعته والتحلي بالحذر", "زيادة سرعته لتجاوز المنعطف بسرعة", "استخدام البوق بشكل مستمر"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما يقترب سائق الدراجة النارية من ممر للمشاة، يجب عليه:",
+                options: ["تخفيف سرعته وإعطاء الأفضلية للمشاة", "زيادة سرعته لتجاوز الممر بسرعة", "استخدام البوق بشكل مستمر"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما يقترب سائق الدراجة النارية من سيارة طوارئ، يجب عليه:",
+                options: ["إعطاء الأفضلية للسيارة الطارئة", "زيادة سرعته لتجاوز السيارة الطارئة", "استخدام البوق بشكل مستمر"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما يقترب سائق الدراجة النارية من منطقة ضباب كثيف، يجب عليه:",
+                options: ["تخفيف سرعته واستخدام الأضواء", "زيادة سرعته لتجاوز المنطقة بسرعة", "استخدام البوق بشكل مستمر"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما يقترب سائق الدراجة النارية من منطقة مطر شديد، يجب عليه:",
+                options: ["تخفيف سرعته وزيادة المسافة الأمنة", "زيادة سرعته لتجاوز المنطقة بسرعة", "استخدام البوق بشكل مستمر"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما يقترب سائق الدراجة النارية من منطقة رياح قوية، يجب عليه:",
+                options: ["تخفيف سرعته والتحلي بالحذر", "زيادة سرعته لتجاوز المنطقة بسرعة", "استخدام البوق بشكل مستمر"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما يقترب سائق الدراجة النارية من منطقة طريق زلق، يجب عليه:",
+                options: ["تخفيف سرعته والتحلي بالحذر", "زيادة سرعته لتجاوز المنطقة بسرعة", "استخدام البوق بشكل مستمر"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما يقترب سائق الدراجة النارية من منطقة طريق منحدر، يجب عليه:",
+                options: ["تخفيف سرعته والتحلي بالحذر", "زيادة سرعته لتجاوز المنطقة بسرعة", "استخدام البوق بشكل مستمر"],
+                correct: 0,
+                image: ""
+            }
+        ];
+        
+        startQuiz(motorcycleQuestions);
+    </script>
+</body>
+</html>

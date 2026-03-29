@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار قيادة السيارات عمومي</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>اختبار قيادة السيارات عمومي</h1>
+            <a href="index.html" class="back-btn">← العودة للرئيسية</a>
+        </header>
+        
+        <main>
+            <div class="quiz-container">
+                <div id="quiz-content">
+                    <div class="question-container">
+                        <div class="progress-bar">
+                            <span id="progress-text">السؤال 1 من 30</span>
+                            <div class="progress-track">
+                                <div id="progress-fill" class="progress-fill"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="question-image">
+                            <img id="question-img" src="" alt="صورة السؤال">
+                        </div>
+                        
+                        <h2 id="question-text">جاري تحميل السؤال...</h2>
+                        
+                        <div id="options-container" class="options">
+                            <!-- Options will be loaded here -->
+                        </div>
+                        
+                        <div class="button-container">
+                            <button id="confirm-btn" class="confirm-btn" style="display: none;">تأكيد الإجابة</button>
+                            <button id="next-btn" class="next-btn" style="display: none;">السؤال التالي</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="result-container" style="display: none;">
+                    <h2>النتيجة</h2>
+                    <div class="result-display">
+                        <p id="score-text">لقد حصلت على 0 من 0</p>
+                        <p id="percentage-text">0%</p>
+                        <p id="message-text"></p>
+                        <button onclick="restartQuiz()" class="restart-btn">إعادة الاختبار</button>
+                        <a href="index.html" class="back-btn">العودة للرئيسية</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="quiz.js"></script>
+    <script>
+        // Public car quiz questions - Original from the source
+        const publicCarQuestions = [
+            {
+                question: "عند دخولك في نفق أثناء القيادة نهاراً، عليك:",
+                options: ["تشغيل الإضاءة المنخفضة (أضواء التلاقي) وتخفيف السرعة", "إستعمال الزمور", "تشغيل الإضاءة المنخفضة (أضواء التلاقي) وزيادة السرعة"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عند قيادتك لمركبة أثناء الليل خلف مركبة أخرى عليك:",
+                options: ["تشغيل الإضاءة المنخفضة (أضواء التلاقي)", "استعمال اضواء الطريق (الاضاءة العالية)", "عدم استعمال الضوء"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "في حال ظهور مركبة من الجهة المعاكسة أثناء استعمالك للاضاءة العالية ليلاً عليك:",
+                options: ["إطفاء الضوء نهائياً", "تقطيع الضوء بتبديله بين ضوء الطريق وضوء التلاقي", "الإنتقال إلى ضوء التلاقي"],
+                correct: 2,
+                image: ""
+            },
+            {
+                question: "عند تعبئة خزان مركبتك بالوقود، عليك:",
+                options: ["ألا تهتم لأن هذا الأمر لا ينطوي على أي خطر", "أن تطفئ محرك المركبة", "أن تبقي المحرك شغالاً"],
+                correct: 1,
+                image: ""
+            },
+            {
+                question: "عندما تتحوّل الاشارة من اللون الاخضر الى اللون الاصفر لحظة عبور مركبتك للتقاطع، عليك:",
+                options: ["التوقف فورًا وسط التقاطع", "متابعة سيرك بانتباه", "تركيز نظرك على الاشارة"],
+                correct: 1,
+                image: ""
+            },
+            {
+                question: "عندما تتحوّل الاشارة من اللون الاحمر الى اللون الاخضر، عليك:",
+                options: ["الانطلاق فوراً", "الانتظار قليلاً ثم الانطلاق بعد التأكد من خلو الطريق", "استعمال الزمور"],
+                correct: 1,
+                image: ""
+            },
+            {
+                question: "عندما تتحوّل الاشارة من اللون الاخضر الى اللون الاحمر، عليك:",
+                options: ["التوقف فوراً", "متابعة سيرك بانتباه", "تركيز نظرك على الاشارة"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما تتحوّل الاشارة من اللون الاصفر الى اللون الاحمر، عليك:",
+                options: ["التوقف فوراً", "متابعة سيرك بانتباه", "تركيز نظرك على الاشارة"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما تتحوّل الاشارة من اللون الاحمر الى اللون الاصفر، عليك:",
+                options: ["الاستعداد للانطلاق", "الانطلاق فوراً", "استعمال الزمور"],
+                correct: 0,
+                image: ""
+            },
+            {
+                question: "عندما تتحوّل الاشارة من اللون الاصفر الى اللون الاخضر، عليك:",
+                options: ["الانطلاق فوراً", "الانتظار قليلاً ثم الانطلاق بعد التأكد من خلو الطريق", "استعمال الزمور"],
+                correct: 1,
+                image: ""
+            },
+            {
+                question: "عندما ترى إشارة توقف، ماذا تعني؟",
+                options: ["التوقف الكامل", "تخفيف السرعة", "الاستمرار", "إعطاء الأفضلية"],
+                correct: 0,
+                image: "images/signs/sign71.jpg"
+            },
+            {
+                question: "عندما ترى إشارة إعطاء الأفضلية، ماذا تعني؟",
+                options: ["إعطاء الأفضلية للآخرين", "التوقف", "المرور أولاً", "زيادة السرعة"],
+                correct: 0,
+                image: "images/signs/sign72.jpg"
+            },
+            {
+                question: "عندما ترى هذه الإشارة، ماذا تعني؟",
+                options: ["ممنوع الدخول", "إعطاء الأفضلية", "التوقف", "المرور مسموح"],
+                correct: 0,
+                image: "images/signs/sign73.jpg"
+            },
+            {
+                question: "ما معنى هذه الإشارة؟",
+                options: ["ممنوع الوقوف", "مسموح الوقوف", "موقف سيارات", "ممر مشاة"],
+                correct: 0,
+                image: "images/signs/sign74.jpg"
+            },
+            {
+                question: "عندما ترى هذه الإشارة، ماذا تعني؟",
+                options: ["ممنوع التجاوز", "إلزامي الدوران", "طريق مغلق", "موقف سيارات"],
+                correct: 0,
+                image: "images/signs/sign75.jpg"
+            },
+            {
+                question: "ماذا تعني هذه الإشارة؟",
+                options: ["إلزامي الدوران يمين", "إلزامي الدوران يسار", "الاستمرار مستقيماً", "ممنوع الدخول"],
+                correct: 0,
+                image: "images/signs/sign76.jpg"
+            },
+            {
+                question: "عند رؤية هذه الإشارة، ماذا تعني؟",
+                options: ["إلزامي الدوران يسار", "إلزامي الدوران يمين", "الاستمرار مستقيماً", "ممنوع الدخول"],
+                correct: 0,
+                image: "images/signs/sign77.jpg"
+            },
+            {
+                question: "ما معنى هذه الإشارة؟",
+                options: ["الاستمرار مستقيماً", "الدوران يمين", "الدوران يسار", "ممنوع الدخول"],
+                correct: 0,
+                image: "images/signs/sign78.jpg"
+            },
+            {
+                question: "عندما ترى هذه الإشارة، ماذا تعني؟",
+                options: ["طريق رئيسي", "طريق فرعي", "نهاية الطريق", "ممنوع الدخول"],
+                correct: 0,
+                image: "images/signs/sign79.jpg"
+            },
+            {
+                question: "ماذا تعني هذه الإشارة؟",
+                options: ["طريق فرعي", "طريق رئيسي", "نهاية الطريق", "ممنوع الدخول"],
+                correct: 0,
+                image: "images/signs/sign80.jpg"
+            },
+            {
+                question: "عندما ترى هذه الإشارة، ماذا تعني؟",
+                options: ["نهاية الطريق الرئيسي", "بداية الطريق", "مفرق طرق", "دوران"],
+                correct: 0,
+                image: "images/signs/sign81.jpg"
+            },
+            {
+                question: "ما معنى هذه الإشارة؟",
+                options: ["نهاية الطريق الفرعي", "بداية الطريق", "مفرق طرق", "دوران"],
+                correct: 0,
+                image: "images/signs/sign82.jpg"
+            },
+            {
+                question: "عندما ترى هذه الإشارة، ماذا تعني؟",
+                options: ["تقاطع", "مفرق طرق", "دوران", "نهاية الطريق"],
+                correct: 0,
+                image: "images/signs/sign83.jpg"
+            },
+            {
+                question: "عندما ترى هذه الإشارة، ماذا يجب عليك؟",
+                options: ["إعطاء الأفضلية للمشاة", "متابعة سيرك بانتباه", "استعمال الزمور"],
+                correct: 0,
+                image: "images/signs/sign84.jpg"
+            },
+            {
+                question: "عندما ترى هذه الإشارة، ماذا يجب عليك؟",
+                options: ["إعطاء الأفضلية للدراجات", "متابعة سيرك بانتباه", "استعمال الزمور"],
+                correct: 0,
+                image: "images/signs/sign85.jpg"
+            },
+            {
+                question: "عندما ترى هذه الإشارة، ماذا يجب عليك؟",
+                options: ["التوقف والنظر", "متابعة سيرك بانتباه", "استعمال الزمور"],
+                correct: 0,
+                image: "images/signs/sign86.jpg"
+            },
+            {
+                question: "ماذا تعني هذه الإشارة؟",
+                options: ["منطقة سكنية", "منطقة تجارية", "منطقة صناعية", "منطقة زراعية"],
+                correct: 0,
+                image: "images/signs/sign87.jpg"
+            },
+            {
+                question: "عندما ترى هذه الإشارة، ماذا يجب عليك؟",
+                options: ["تخفيف السرعة", "زيادة السرعة", "استعمال الزمور"],
+                correct: 0,
+                image: "images/signs/sign88.jpg"
+            },
+            {
+                question: "عندما ترى هذه الإشارة، ماذا يجب عليك؟",
+                options: ["تخفيف السرعة", "زيادة السرعة", "استعمال الزمور"],
+                correct: 0,
+                image: "images/signs/sign89.jpg"
+            },
+            {
+                question: "ماذا تعني هذه الإشارة؟",
+                options: ["منطقة تجارية", "منطقة سكنية", "منطقة صناعية", "منطقة زراعية"],
+                correct: 0,
+                image: "images/signs/sign90.jpg"
+            }
+        ];
+        
+        startQuiz(publicCarQuestions);
+    </script>
+</body>
+</html>
