@@ -6,7 +6,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9)), url('images/2.jpg') center/30% no-repeat fixed;
+    background: linear-gradient(90 deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9)), url('images/2.jpg') center/10% no-repeat fixed;
     min-height: 100vh;
     direction: rtl;
 }
